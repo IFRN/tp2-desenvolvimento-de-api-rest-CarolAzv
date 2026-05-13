@@ -10,6 +10,7 @@ class EleitorSerializer(serializers.ModelSerializer):
             code='cpf_invalido'
         )
     ]) #apenas entradas no formato 000.000.000-00
+    
     class Meta:
         model = Eleitor
         fields = '__all__'
