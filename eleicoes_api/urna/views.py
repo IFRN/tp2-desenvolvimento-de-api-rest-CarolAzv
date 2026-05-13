@@ -59,7 +59,7 @@ class EleicaoViewSet(viewsets.ModelViewSet):
         token = hashlib.sha256(f"{eleitor.id}{eleicao.id}{timezone.now()}".encode()).hexdigest()
         voto = Voto.objects.create(eleicao=eleicao, candidato=candidato, em_branco=em_branco, comprovante_hash=token)
         candidato_nome = candidato.nome_urna if candidato else "EM BRANCO"
-        
+
         return Response({
             "mensagem": "Voto registrado com sucesso. Guarde o seu comprovante.",
             "comprovante": {
@@ -102,6 +102,20 @@ class VotoViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = []
     ordering_fields = []
+
+
+@api_view(['GET']) #/eleicoes_api/verificar-comprovante/?token=<TOKEN>
+def verificar_comprovante(request):
+    token = request.GET.get('token')
+
+    try:
+        voto = Voto.objects.get(comprovante_hash=token)
+        candidato_nome = voto.candidato.nome_urna if voto.candidato else "EM BRANCO"
+        return Response({
+            "eleicao": voto.eleicao.titulo,
+            "candidato": candidato_nome,
+            "data_hora": voto.data_hora.isoformat()
+        })
 
 
 router = DefaultRouter()
