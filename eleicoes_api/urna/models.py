@@ -37,17 +37,6 @@ class Eleicao(models.Model):
             raise ValidationError({
                 "data_fim": "Data final não pode ser antes da data inicial"
             })
-        if status=="rascunho":
-            choices=[("aberta", "ABERTA")]
-            status = models.CharField(choices=choices, default="rascunho")
-        if status=="aberta":
-            choices=[("encerrada", "ENCERRADA")]
-            tatus = models.CharField(choices=choices, default="aberta")
-        if status=="encerrada":
-            choices=[("apurada", "APURADA")]
-            tatus = models.CharField(choices=choices, default="encerrada")
-        if status=="apurada":
-            tatus = models.CharField(choices=None, default="apurada")
 
 class Candidato(models.Model):
     eleicao = models.ForeignKey(Eleicao, on_delete=models.CASCADE, related_name='candidatos')
